@@ -3,7 +3,7 @@
     /*
      *  Constants
      * */
-    var API_HOST = 'http://localhost:9000';
+    var API_HOST = '';
     var API_URL_BASE = API_HOST + "/api/pet";
     var API_URL_SYNC = API_URL_BASE + '/sync';
     var API_GET_PETS = API_URL_BASE;
