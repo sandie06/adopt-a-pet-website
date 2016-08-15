@@ -25,6 +25,7 @@
             return '<tr>' + row + '</tr>';
         }).join("");
         $('table tbody').empty().append(content);
+        setMessage()();
     }
 
     function updateSelect($select) {
@@ -34,14 +35,17 @@
             });
             content = '<option selected> All </option>' + content;
             $select.empty().append(content);
+            setMessage()();
         }
     }
 
     function setMessage(msg) {
-        if (msg) {
-            $('.message').append('<p>' + msg + '</p>');
-        } else {
-            $('.message').empty();
+        return function(){
+            if (msg) {
+                $('.message').empty().append('<p>' + msg + '</p>');
+            } else {
+                $('.message').empty();
+            }
         }
     }
 
@@ -73,21 +77,36 @@
     }
 
     /*
+    *  UI Operations
+    * */
+
+    function updateAgeSelect(){
+        getAllAge().then(updateSelect($('#age')), setMessage('Update age select failed.'));
+    }
+
+    function updateBreedSelect(){
+        getAllBreed().then(updateSelect($('#breed')), setMessage('Update breed select failed.'));
+    }
+
+    /*
      *  Event logic
      * */
     $(function () {
-        $('.sync button').click(function () {
-            syncPets().then(updateTable);
+        $('#sync').click(function () {
+            syncPets().then(function(data){
+                updateTable(data);
+                updateAgeSelect ();
+                updateBreedSelect ();
+                setMessage();
+            },  setMessage('Sync is not succeeded. Please try again later.')
+            );
         });
 
-        getAllAge().then(updateSelect($('#age')));
-
-        getAllBreed().then(updateSelect($('#breed')));
 
         $('#breed').change(function (e) {
             var select = $(this).val();
             if (select !== 'All') {
-                getPetsByBreed(select).then(updateTable);
+                getPetsByBreed(select).then(updateTable,  setMessage('Operation failed. Please try again later.'));
                 $('#age').val('All');
             }
         });
@@ -95,7 +114,7 @@
         $('#age').change(function (e) {
             var select = $(this).val();
             if (select !== 'All') {
-                getPetsByAge(select).then(updateTable);
+                getPetsByAge(select).then(updateTable,  setMessage('Operation failed. Please try again later.'));
                 $('#breed').val('All');
             }
         });

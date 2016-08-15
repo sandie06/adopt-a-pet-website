@@ -95,18 +95,22 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+.form-group label{
+    margin: 10px;
+}
 
+.form-group select{
+    min-width:180px;
+}
 
+.filter{
+    margin: 80px 20px 20px;
+}
 
-
-
-
-
-
-
-
-
-
+.message{
+    color:red;
+    margin: 10px 0;
+}
 
 
 
